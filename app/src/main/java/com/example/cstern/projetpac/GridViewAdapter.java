@@ -2,6 +2,7 @@ package com.example.cstern.projetpac;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by cstern on 11/12/17.
@@ -56,23 +58,42 @@ public class GridViewAdapter extends BaseAdapter {
     }
 
     private void melangerJeu() {
-        //ArrayList<Integer> mListBitmapActuel;
-        //Bitmap mTempoBitmapActuel =  mListBitmapActuel.get(5);
-        //System.out.println(mListBitmapActuel.get(1));
-        // mListBitmapActuel.set(1,mListBitmapActuel.get(5));
-        //mListBitmapActuel.set(5,mListBitmapActuel.get(1));
+
+        for(int i = 0;i<1000;i++){
+
+//        for(int i = 0;i<1000;i++){
+            Random r = new Random();
+            int min = 0;
+            int max = (mColumn * mColumn) -1;
+            int rand = r.nextInt(max - min+1) + min;
+
+            bougerCase(rand);
+        }
+//           ArrayList<Integer> ListeABouger = new ArrayList<Integer>();
+//           for (int i =0;i<mColumn;i++){
+//               ListeABouger.add(i);
+//           }
+//        for (Integer a: ListeABouger
+//             ) {
+//
+//
+//        }
+//           Bitmap mTempoBitmapActuel =  mListBitmapActuel.get(5);
+//           mListBitmapActuel.set(1,mTempoBitmapActuel);
+//           mListBitmapActuel.set(5,mListBitmapActuel.get(1));
 
     }
     private void bougerCase(int position){
 
         if(
-                position+mColumn != mBlancPos &&
+                (position+mColumn != mBlancPos &&
                 position-mColumn != mBlancPos&&
                 position-1 != mBlancPos&&
-                position+1 != mBlancPos) {
+                position+1 != mBlancPos ) || mBlancPos%mColumn == mColumn -1 && position%mColumn==0 ||
+                        mBlancPos%mColumn == 0 && mBlancPos == position+1){
 
             System.out.println("Attention : Mouvement interdit");
-            Toast.makeText(mActivity, "Attention : Mouvement interdit", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(mActivity, "Attention : Mouvement interdit", Toast.LENGTH_SHORT).show();
 
 
 
@@ -81,25 +102,19 @@ public class GridViewAdapter extends BaseAdapter {
 
             System.out.println("Position : "+position);
             System.out.println("mColumn: " + mColumn);
-            System.out.println("mColumn%position : " + position%mColumn);
-            System.out.println("mBlanc: " + mBlancPos);
+  //          System.out.println("position%mColumn: " + position%mColumn);
+//            System.out.println("mColumn%position: " + mColumn%position);
 
-            if (mBlancPos%mColumn == 0){
-                Toast.makeText(mActivity, "TOUJOURS PAS", Toast.LENGTH_SHORT).show();
-            }
-            if (mBlancPos%position == mColumn-1 ){
-                Toast.makeText(mActivity, "NON", Toast.LENGTH_SHORT).show();
-            }
-                mBlackCase = Bitmap.createBitmap(mImageWidth/mColumn,mImageHeight/mColumn,Bitmap.Config.ARGB_8888);
-                Bitmap mTempoBitmapActuel =  mListBitmapActuel.get(position);
-               // System.out.println("Positon blanc trouvé en "+mBlancPos);
-                mListBitmapActuel.set(mBlancPos,mTempoBitmapActuel);
-                mListBitmapActuel.set(position,mBlackCase);
-                //System.out.println("Echange entre l'image "+position+" et blanc");
-                mBlancPos = position;
-                //System.out.println("Position blanc en "+position);
-                notifyDataSetChanged();
-            }
+            mBlackCase = Bitmap.createBitmap(mImageWidth/mColumn,mImageHeight/mColumn,Bitmap.Config.ARGB_8888);
+            Bitmap mTempoBitmapActuel =  mListBitmapActuel.get(position);
+           // System.out.println("Positon blanc trouvé en "+mBlancPos);
+            mListBitmapActuel.set(mBlancPos,mTempoBitmapActuel);
+            mListBitmapActuel.set(position,mBlackCase);
+            //System.out.println("Echange entre l'image "+position+" et blanc");
+            mBlancPos = position;
+            //System.out.println("Position blanc en "+position);
+            notifyDataSetChanged();
+        }
 
 
 
@@ -138,15 +153,42 @@ public class GridViewAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
 
+
                 bougerCase(position);
-//                verifierVictoire();
+
+                if(verifierVictoire()){
+                    Toast.makeText(mActivity, "Vous avez gagné ! ", Toast.LENGTH_LONG).show();
+
+
+
+                }
             }
+
+
         });
 
         return imageView;
 
 
     }
+    private boolean verifierVictoire() {
+        boolean bool  = false;
+        int count = 0;
+      for(int i=0;i< mListBitmapFinal.size();i++){
+          if (i!= 0){
+              if (mListBitmapActuel.get(i) == mListBitmapFinal.get(i)){
+                  count +=1;
+              }
+          }
+      }
+
+        if(count== mColumn*mColumn-1){
+            bool = true;
+        }
+        return bool;
+    }
+
+
 
 
 }

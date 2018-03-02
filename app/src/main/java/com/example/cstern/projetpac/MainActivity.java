@@ -18,8 +18,8 @@ public class MainActivity extends Activity {
         final Button buttonplay= findViewById(R.id.btnPlay);
         buttonplay.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent tutorialPage = new Intent (MainActivity.this, Main2Activity.class);
-                startActivity(tutorialPage);
+                Intent activity = new Intent (MainActivity.this, Main2Activity.class);
+                startActivity(activity);
 
             }
         });
