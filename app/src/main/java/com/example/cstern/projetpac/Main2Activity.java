@@ -7,14 +7,17 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
@@ -28,6 +31,9 @@ public class Main2Activity extends Activity {
     private GridViewAdapter gridViewAdapter;
     private int nbColumn = 3;
     private GridView myGridView;
+    private TextView counter;
+    private int count = 0;
+    private Chronometer chronometer;
 
 
     @Override
@@ -116,6 +122,12 @@ public class Main2Activity extends Activity {
 
     }
     public void StartGame(int nb){
+        chronometer = (Chronometer) findViewById(R.id.timer);
+
+        chronometer.setBase(SystemClock.elapsedRealtime());
+        chronometer.stop();
+        chronometer.start();
+        chronometer.setFormat("%s");
 
 
         //On traduit l'image en BitMap
@@ -129,5 +141,17 @@ public class Main2Activity extends Activity {
         //On met en variable le nombre de colonne et de ligne
         myGridView.setNumColumns(nbColumn);
         myGridView.setAdapter(gridViewAdapter);
+    }
+
+    public void oneMoreCount() {
+        this.count +=1;
+    }
+    public void majCounter(){
+        oneMoreCount();
+        counter = findViewById(R.id.counter);
+        counter.setText(String.valueOf(count));
+    }
+    public String getChronmeter(){
+        return chronometer.toString();
     }
 }

@@ -4,22 +4,29 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Random;
+import android.os.Handler;
+
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.logging.LogRecord;
 
 /**
  * Created by cstern on 11/12/17.
  */
 public class GridViewAdapter extends BaseAdapter {
 
-    private final Activity mActivity;
+    private final Main2Activity mActivity;
     private final Bitmap mBitmap;
     private final int mImageWidth;
     private final int mImageHeight;
@@ -29,8 +36,10 @@ public class GridViewAdapter extends BaseAdapter {
     private int mBlancPos=0;
     private Bitmap mBlackCase;
     private ArrayList<Bitmap> mListBitmapActuel;
+    private int count = 0;
+    private int automode =0;
 
-    public GridViewAdapter(Bitmap bitmap, int gridViewWidht, int column, Activity activity) {
+    public GridViewAdapter(Bitmap bitmap, int gridViewWidht, int column, Main2Activity activity) {
         mActivity = activity;
         mBitmap = bitmap;
         mImageWidth = mBitmap.getWidth();
@@ -67,7 +76,7 @@ public class GridViewAdapter extends BaseAdapter {
             int max = (mColumn * mColumn) -1;
             int rand = r.nextInt(max - min+1) + min;
 
-            bougerCase(rand);
+            bougerCase(rand,false);
         }
 //           ArrayList<Integer> ListeABouger = new ArrayList<Integer>();
 //           for (int i =0;i<mColumn;i++){
@@ -83,7 +92,7 @@ public class GridViewAdapter extends BaseAdapter {
 //           mListBitmapActuel.set(5,mListBitmapActuel.get(1));
 
     }
-    private void bougerCase(int position){
+    private void bougerCase(int position,boolean manual){
 
         if(
                 (position+mColumn != mBlancPos &&
@@ -99,7 +108,7 @@ public class GridViewAdapter extends BaseAdapter {
 
 
         }else{
-
+            if(manual){mActivity.majCounter();}
             System.out.println("Position : "+position);
             System.out.println("mColumn: " + mColumn);
   //          System.out.println("position%mColumn: " + position%mColumn);
@@ -114,6 +123,8 @@ public class GridViewAdapter extends BaseAdapter {
             mBlancPos = position;
             //System.out.println("Position blanc en "+position);
             notifyDataSetChanged();
+            count +=1;
+
         }
 
 
@@ -154,10 +165,12 @@ public class GridViewAdapter extends BaseAdapter {
             public void onClick(View v) {
 
 
-                bougerCase(position);
 
+                bougerCase(position,true);
+                automodeCounter(position);
                 if(verifierVictoire()){
-                    Toast.makeText(mActivity, "Vous avez gagné ! ", Toast.LENGTH_LONG).show();
+                    Toast.makeText(mActivity, "Vous avez gagné en :  "+count +"coups ! ", Toast.LENGTH_LONG).show();
+
 
 
 
@@ -168,6 +181,38 @@ public class GridViewAdapter extends BaseAdapter {
         });
 
         return imageView;
+
+
+    }
+    private void automodeCounter(int position){
+        if(position==0){
+
+            automode+=1;
+        }else{
+            automode = 1;
+        }
+
+        if(automode==10){
+
+            autoMode();
+        }
+    }
+
+
+    private void autoMode() {
+
+
+        while (!verifierVictoire()) {
+
+
+                            Random r = new Random();
+                            int min = 0;
+                            int max = (mColumn * mColumn) - 1;
+                            int rand = r.nextInt(max - min + 1) + min;
+                            notifyDataSetChanged();
+                            bougerCase(rand, false);
+                        }
+
 
 
     }
