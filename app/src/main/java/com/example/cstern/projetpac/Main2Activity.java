@@ -19,6 +19,8 @@ import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
 
@@ -129,9 +131,15 @@ public class Main2Activity extends Activity {
         chronometer.start();
         chronometer.setFormat("%s");
 
-
+        TextView compteur = (TextView) findViewById(R.id.counter);
+        compteur.setText("0");
         //On traduit l'image en BitMap
-        mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.image1);
+
+        Bundle bundle=this.getIntent().getExtras();
+        int pic=bundle.getInt("image");
+
+        mBitmap = BitmapFactory.decodeResource(getResources(), pic);
+        //mBitmap = BitmapFactory.decodeResource(getResources(), image1);
 
         //On créer un adaptateur pour mettre l'image dans la gridview
         gridViewAdapter = new GridViewAdapter(mBitmap, (int) (this.getWindowManager().getDefaultDisplay().getWidth() - (getResources().getDimension(R.dimen.activity_horizontal_margin)*2)),nbColumn,this);

@@ -205,12 +205,15 @@ public class GridViewAdapter extends BaseAdapter {
         while (!verifierVictoire()) {
 
 
-                            Random r = new Random();
-                            int min = 0;
-                            int max = (mColumn * mColumn) - 1;
-                            int rand = r.nextInt(max - min + 1) + min;
-                            notifyDataSetChanged();
-                            bougerCase(rand, false);
+//                            Random r = new Random();
+//                            int min = 0;
+//                            int max = (mColumn * mColumn) - 1;
+//                            int rand = r.nextInt(max - min + 1) + min;
+//                            notifyDataSetChanged();
+//                            bougerCase(rand, false);
+
+                        mListBitmapActuel =mListBitmapFinal;
+                        notifyDataSetChanged();
                         }
 
 
